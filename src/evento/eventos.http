@@ -1,0 +1,59 @@
+### obtener todos los eventos
+GET http://localhost:3000/api/eventos
+
+### crear un evento
+# @name crearPartido
+POST http://localhost:3000/api/eventos
+Content-Type: application/json
+
+{
+    "nombre": "Central vs Nob",
+    "descripcion": "Partido por la fecha numero 10 de la Liga Profesional",
+    "precioEntrada": 15000,
+    "cantidadCupos": 20000,
+    "fechaInicio": "2025-08-14",
+    "horaInicio": "2025-08-14T19:00:00Z",
+    "cuposDisponibles": 20000,
+    "claseEvento": 1,
+    "organizador": 2,
+    "direccion": 2
+}
+
+### ID
+@id = {{crearPartido.response.body.data.id}}
+
+### obtener un evento
+GET http://localhost:3000/api/eventos/{{id}}
+
+### modificar un evento 
+PUT http://localhost:3000/api/eventos/{{id}}
+Content-Type: application/json
+
+{
+    "nombre": "Independiente vs Racing",
+    "cantidadCupos": 30000,
+    "horaInicio": "2025-08-14T21:00:00Z",
+    "cuposDisponibles": 30000
+}
+
+### crear un evento
+# @name crearPartidoParaBorrar
+POST http://localhost:3000/api/eventos
+Content-Type: application/json
+
+{
+    "nombre": "Boca vs River",
+    "descripcion": "Partido por la fecha numero 15 de la Liga Profesional",
+    "precioEntrada": 20000,
+    "cantidadCupos": 40000,
+    "fechaInicio": "2025-09-22",
+    "horaInicio": "2025-09-22T19:00:00",
+    "cuposDisponibles": 40000,
+    "claseEvento": 1,
+    "organizador": 1,
+    "direccion": 1
+}
+
+### eliminar un evento
+@idABorrar = {{crearPartidoParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/eventos/{{idABorrar}}

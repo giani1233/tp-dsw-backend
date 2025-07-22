@@ -1,0 +1,29 @@
+### GET ALL
+GET http://localhost:3000/api/eventos/clases
+
+### POST
+# @name crearClaseEvento
+POST http://localhost:3000/api/eventos/clases
+Content-Type: application/json
+
+{
+    "nombre": "Deportes"
+}
+
+### ID
+@id = {{crearClaseEvento.response.body.data.id}}
+
+### GET ONE
+GET http://localhost:3000/api/eventos/clases/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/eventos/clases/{{id}}
+Content-Type: application/json
+
+{
+    "nombre": "Fiestas"
+}
+
+### DELETE
+@idToDelete = {{crearClaseEvento.response.body.data.id}}
+DELETE http://localhost:3000/api/eventos/clases/{{idToDelete}}

@@ -1,0 +1,43 @@
+### obtener todas las localidades
+GET http://localhost:3000/api/localidades
+
+### crear una localidad
+# @name crearLocalidad
+POST http://localhost:3000/api/localidades
+Content-Type: application/json
+
+{
+    "nombre": "Rosario",
+    "codigoPostal": 2000,
+    "provincia": 1
+}
+
+### ID
+@id = {{crearLocalidad.response.body.data.id}}
+
+### obtener una localidad
+GET http://localhost:3000/api/localidades/{{id}}
+
+### modificar una localidad 
+PUT http://localhost:3000/api/localidades/{{id}}
+Content-Type: application/json
+
+{
+    "codigoPostal": 2001
+}
+
+
+### crear una localidad
+# @name crearLocalidadParaBorrar
+POST http://localhost:3000/api/localidades
+Content-Type: application/json
+
+{
+    "nombre": "Arroyo Seco",
+    "codigoPostal": 1333,
+    "provincia": 1
+}
+
+### eliminar una localidad
+@idABorrar = {{crearLocalidadParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/localidades/{{idABorrar}}

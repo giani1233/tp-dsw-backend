@@ -1,0 +1,42 @@
+### obtener todas las entradas
+GET http://localhost:3000/api/entradas
+
+### crear una entrada
+# @name crearEntrada
+POST http://localhost:3000/api/entradas
+Content-Type: application/json
+
+{
+  "estado": "adquirida",
+  "evento": 2,
+  "cliente": 1
+}
+
+### ID
+@id = {{crearEntrada.response.body.data.id}}
+
+### obtener una entrada
+GET http://localhost:3000/api/entradas/{{id}}
+
+### modificar una entrada
+PUT http://localhost:3000/api/entradas/{{id}}
+Content-Type: application/json
+
+{
+  "estado": "reembolsada"
+}
+
+### crear una entrada
+# @name crearEntradaParaBorrar
+POST http://localhost:3000/api/entradas
+Content-Type: application/json
+
+{
+  "estado": "adquirida",
+  "evento": 1,
+  "cliente": 1
+}
+
+### eliminar una entrada
+@idABorrar = {{crearEntradaParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/entradas/{{idABorrar}}

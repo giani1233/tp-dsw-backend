@@ -1,0 +1,66 @@
+### obtener todos los usuarios
+GET http://localhost:3000/api/usuarios
+
+### crear un cliente
+# @name crearCliente
+POST http://localhost:3000/api/usuarios
+Content-Type: application/json
+
+{
+    "dni": "12345678",
+    "nombre": "Diego",
+    "apellido": "Fernandez",
+    "email": "diegofernandez@gmail.com",
+    "telefono": "1234567890",
+    "fechaNacimiento": "2001-04-02",
+    "type": "Cliente"
+}
+
+### crear un organizador
+# @name crearOrganizador
+POST http://localhost:3000/api/usuarios
+Content-Type: application/json
+
+{
+    "dni": "12121212",
+    "nombre": "Sergio",
+    "apellido": "Gomez",
+    "email": "sergiogomez@gmail.com",
+    "telefono": "0987654321",
+    "empresa": "Eventos S.A.",
+    "type": "Organizador"
+}
+
+
+### ID
+@id = {{crearCliente.response.body.data.id}}
+
+### obtener un usuario
+GET http://localhost:3000/api/usuarios/{{id}}
+
+### modificar un usuario
+PUT http://localhost:3000/api/usuarios/{{id}}
+Content-Type: application/json
+
+{
+    "email": "d.fernandez.2000@gmail.com"
+}
+
+### crear un cliente
+# @name crearClienteParaBorrar
+POST http://localhost:3000/api/usuarios
+Content-Type: application/json
+
+{
+    "dni": "45454545",
+    "nombre": "Maximo",
+    "apellido": "Gutierrez",
+    "email": "maxiguti12@gmail.com",
+    "telefono": "432345123",
+    "fechaNacimiento": "2004-05-13",
+    "type": "Cliente"
+}
+
+### eliminar un usuario
+@idABorrar = {{crearClienteParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/usuarios/{{idABorrar}}

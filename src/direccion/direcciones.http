@@ -1,0 +1,42 @@
+### obtener todas las direcciones
+GET http://localhost:3000/api/direcciones
+
+### crear una direccion
+# @name crearDireccion
+POST http://localhost:3000/api/direcciones
+Content-Type: application/json
+
+{
+    "calle": "San Luis",
+    "altura": 2400,
+    "localidad": 1
+}
+
+### ID
+@id = {{crearDireccion.response.body.data.id}}
+
+### obtener una direccion
+GET http://localhost:3000/api/direcciones/{{id}}
+
+### modificar una direccion
+PUT http://localhost:3000/api/direcciones/{{id}}
+Content-Type: application/json
+
+{
+    "calle": "Mendoza"
+}
+
+### crear una direccion
+# @name crearDireccionParaBorrar
+POST http://localhost:3000/api/direcciones
+Content-Type: application/json
+
+{
+    "calle": "9 de Julio",
+    "altura": 1300,
+    "localidad": 1
+}
+
+### eliminar una direccion
+@idABorrar = {{crearDireccionParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/direcciones/{{idABorrar}}

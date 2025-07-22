@@ -1,0 +1,41 @@
+### obtener todas las provincias
+GET http://localhost:3000/api/provincias
+
+### crear una provincia
+# @name crearProvincia
+POST http://localhost:3000/api/provincias
+Content-Type: application/json
+
+{
+    "nombre": "Santa Fe",
+    "codigo": 3
+}
+
+### ID
+@id = {{crearProvincia.response.body.data.id}}
+
+### obtener una provincia
+
+GET http://localhost:3000/api/provincias/{{id}}
+
+### modificar una provincia
+PUT http://localhost:3000/api/provincias/{{id}}
+Content-Type: application/json
+
+{
+    "codigo": 12
+}
+
+### crear una provincia
+# @name crearProvinciaParaBorrar
+POST http://localhost:3000/api/provincias
+Content-Type: application/json
+
+{
+    "nombre": "Buenos Aires",
+    "codigo": 1
+}
+
+### eliminar una provincia
+@idABorrar = {{crearProvinciaParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/provincias/{{idABorrar}}
