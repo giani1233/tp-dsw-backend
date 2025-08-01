@@ -3,7 +3,7 @@ import { EntidadBase } from "../shared/db/entidad.entidadBase.js";
 import { Entrada } from "../entrada/entidad.entrada.js";
 import { Evento } from "../evento/entidad.evento.js";
 
-@Entity({discriminatorColumn: 'tipo'})
+@Entity({discriminatorColumn: 'tipo', discriminatorValue: 'Usuario', abstract: true})
 export abstract class Usuario extends EntidadBase {
 
     @Property({ nullable: false, unique: true })
@@ -23,9 +23,12 @@ export abstract class Usuario extends EntidadBase {
 
     @Property({ nullable: false})
     tipo !: string
+
+    @Property({ nullable: false })
+    contrasena !: string;
 }
 
-@Entity()
+@Entity({ discriminatorValue: 'Cliente' })
 export class Cliente extends Usuario {
 
     @Property({ nullable: false })
@@ -35,7 +38,7 @@ export class Cliente extends Usuario {
     entradas = new Collection<Entrada>(this);
 }
 
-@Entity()
+@Entity({ discriminatorValue: 'Organizador' })
 export class Organizador extends Usuario {
 
     @Property({ nullable: true })
@@ -43,4 +46,9 @@ export class Organizador extends Usuario {
 
     @OneToMany(() => Evento, evento => evento.organizador, { cascade: [Cascade.ALL] })
     eventos = new Collection<Evento>(this);
+}
+
+@Entity({ discriminatorValue: 'Administrador' })
+export class Administrador extends Usuario {
+
 }

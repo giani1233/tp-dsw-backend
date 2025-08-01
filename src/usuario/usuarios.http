@@ -1,54 +1,106 @@
 ### obtener todos los usuarios
 GET http://localhost:3000/api/usuarios
 
+### obtener todos los clientes
+GET http://localhost:3000/api/usuarios/Cliente
+
+### obtener todos los organizadores
+GET http://localhost:3000/api/usuarios/Organizador
+
+### obtener todos los administradores
+GET http://localhost:3000/api/usuarios/Administrador
+
 ### crear un cliente
 # @name crearCliente
-POST http://localhost:3000/api/usuarios
+POST http://localhost:3000/api/usuarios/Cliente
 Content-Type: application/json
 
 {
-    "dni": "12345678",
-    "nombre": "Diego",
-    "apellido": "Fernandez",
-    "email": "diegofernandez@gmail.com",
-    "telefono": "1234567890",
+    "dni": "12345672",
+    "nombre": "Jorge",
+    "apellido": "Chavez",
+    "email": "jorgechavez@gmail.com",
+    "telefono": "156789440",
+    "contrasena": "12345",
     "fechaNacimiento": "2001-04-02",
-    "type": "Cliente"
+    "tipo": "Cliente"
 }
 
 ### crear un organizador
 # @name crearOrganizador
-POST http://localhost:3000/api/usuarios
+POST http://localhost:3000/api/usuarios/Organizador
 Content-Type: application/json
 
 {
-    "dni": "12121212",
-    "nombre": "Sergio",
+    "dni": "44447777",
+    "nombre": "Pablo",
     "apellido": "Gomez",
-    "email": "sergiogomez@gmail.com",
-    "telefono": "0987654321",
+    "email": "pablogomez@gmail.com",
+    "telefono": "0987321",
+    "contrasena": "54321",
     "empresa": "Eventos S.A.",
-    "type": "Organizador"
+    "tipo": "Organizador"
+}
+
+### crear un administrador
+# @name crearAdministrador
+POST http://localhost:3000/api/usuarios/Administrador
+Content-Type: application/json
+
+{
+    "dni": "11112222",
+    "nombre": "Facundo",
+    "apellido": "Aquilante",
+    "email": "facundoaquilante@gmail.com",
+    "telefono": "09876555",
+    "contrasena": "123231",
+    "tipo": "Administrador"
 }
 
 
 ### ID
-@id = {{crearCliente.response.body.data.id}}
+@idCliente = {{crearCliente.response.body.data.id}}
+@idOrganizador = {{crearOrganizador.response.body.data.id}}
+@idAdministrador = {{crearAdministrador.response.body.data.id}}
 
-### obtener un usuario
-GET http://localhost:3000/api/usuarios/{{id}}
+### obtener un cliente
+GET http://localhost:3000/api/usuarios/Cliente/{{idCliente}}
 
-### modificar un usuario
-PUT http://localhost:3000/api/usuarios/{{id}}
+### obtener un organizador
+GET http://localhost:3000/api/usuarios/Organizador/{{idOrganizador}}
+
+### obtener un administrador
+GET http://localhost:3000/api/usuarios/Administrador/{{idAdministrador}}
+
+### modificar un cliente
+PUT http://localhost:3000/api/usuarios/Cliente/{{idCliente}}
 Content-Type: application/json
 
 {
-    "email": "d.fernandez.2000@gmail.com"
+    "email": "j.chavez.2000@gmail.com",
+    "fechaNacimiento": "2000-04-02"
+}
+
+### modificar un organizador
+PUT http://localhost:3000/api/usuarios/Organizador/{{idOrganizador}}
+Content-Type: application/json
+
+{
+    "email": "p.go.mez@gmail.com",
+    "empresa": "fiestaColors"
+}
+
+### modificar un administrador
+PUT http://localhost:3000/api/usuarios/Administrador/{{idAdministrador}}
+Content-Type: application/json
+
+{
+    "email": "f.aquilante@gmail.com"
 }
 
 ### crear un cliente
 # @name crearClienteParaBorrar
-POST http://localhost:3000/api/usuarios
+POST http://localhost:3000/api/usuarios/Cliente
 Content-Type: application/json
 
 {
@@ -57,10 +109,52 @@ Content-Type: application/json
     "apellido": "Gutierrez",
     "email": "maxiguti12@gmail.com",
     "telefono": "432345123",
+    "contrasena": "12345",
     "fechaNacimiento": "2004-05-13",
-    "type": "Cliente"
+    "tipo": "Cliente"
 }
 
 ### eliminar un usuario
-@idABorrar = {{crearClienteParaBorrar.response.body.data.id}}
-DELETE http://localhost:3000/api/usuarios/{{idABorrar}}
+@idClienteABorrar = {{crearClienteParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/usuarios/Cliente/{{idClienteABorrar}}
+
+### crear un organizador
+# @name crearOrganizadorParaBorrar
+POST http://localhost:3000/api/usuarios/Organizador
+Content-Type: application/json
+
+{
+    "dni": "45454545",
+    "nombre": "Maximo",
+    "apellido": "Gutierrez",
+    "email": "maxiguti12@gmail.com",
+    "telefono": "432345123",
+    "contrasena": "12345",
+    "empresa": "FiestasInfantiles S.A",
+    "tipo": "Organizador"
+}
+
+### eliminar un organizador
+@idOrganizadorABorrar = {{crearOrganizadorParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/usuarios/Organizador/{{idOrganizadorABorrar}}
+
+### crear un administrador
+# @name crearAdministradorParaBorrar
+POST http://localhost:3000/api/usuarios/Administrador
+Content-Type: application/json
+
+{
+    "dni": "45454545",
+    "nombre": "Maximo",
+    "apellido": "Gutierrez",
+    "email": "maxiguti12@gmail.com",
+    "telefono": "432345123",
+    "contrasena": "12345",
+    "tipo": "Administrador"
+}
+
+### eliminar un administrador
+@idAdministradorABorrar = {{crearAdministradorParaBorrar.response.body.data.id}}
+DELETE http://localhost:3000/api/usuarios/Administrador/{{idAdministradorABorrar}}
+
+
