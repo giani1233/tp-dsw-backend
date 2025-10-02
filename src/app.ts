@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import express, { NextFunction, Request, Response } from 'express'
+import cors from 'cors'
 import { rutaEvento } from './evento/rutas.evento.js'
 import { orm, syncSchema } from './shared/db/orm.js'
 import { RequestContext } from '@mikro-orm/core'
@@ -17,6 +18,12 @@ app.use(express.json())
 app.use((req, res, next) => {
     RequestContext.create(orm.em, next)
 })
+
+app.use(cors({
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 app.use('/api/eventos/clases', rutaClaseEvento)
 app.use('/api/eventos/', rutaEvento)
