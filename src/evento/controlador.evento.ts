@@ -18,6 +18,8 @@ function sanitizeEventoInput(req: Request, res: Response, next: NextFunction){
         horaFin: req.body.horaFin ? new Date(req.body.horaFin) : undefined,
         cuposDisponibles: req.body.cuposDisponibles,
         edadMinima: req.body.edadMinima,
+        estado: req.body.estado,
+        destacado: req.body.destacado,
         claseEvento: req.body.claseEvento,
         organizador: req.body.organizador,
         direccion: req.body.direccion,

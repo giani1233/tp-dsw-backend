@@ -36,6 +36,12 @@ export class Evento extends EntidadBase {
     @Property({nullable: true})
     edadMinima ?: number
 
+    @Property({nullable: false})
+    estado !: string 
+
+    @Property({nullable: false})
+    destacado !: boolean
+
     @ManyToOne(() => ClaseEvento, {nullable: false})
     claseEvento !: Rel<ClaseEvento>
 
