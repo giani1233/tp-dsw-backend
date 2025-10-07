@@ -1,9 +1,11 @@
 import e, { Request, Response, NextFunction } from 'express';
 import { Administrador, Cliente, Organizador, Usuario } from './entidad.usuario.js';
 import { orm } from '../shared/db/orm.js';
-
+import { ServiceAutenticacion } from '../autenticacion/service.autenticacion.js';
 
 const em = orm.em;
+
+const serviceAutenticacion = new ServiceAutenticacion(em);
 
 function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction){
     req.body.sanitizedInput = {
@@ -94,6 +96,10 @@ async function findOneAdministrador(req: Request, res: Response){
 
 async function addCliente(req: Request, res: Response){
     try {
+        if (req.body.sanitizedInput.contrasena) {
+            req.body.sanitizedInput.contrasena = await serviceAutenticacion.hashContraseña(req.body.sanitizedInput.contrasena)
+        }
+
         const cliente = em.create(Cliente, req.body.sanitizedInput)
         await em.flush()
         res.status(201).json({message: 'Cliente creado', data: cliente})
@@ -104,6 +110,10 @@ async function addCliente(req: Request, res: Response){
 
 async function addOrganizador(req: Request, res: Response){
     try {
+        if (req.body.sanitizedInput.contrasena) {
+            req.body.sanitizedInput.contrasena = await serviceAutenticacion.hashContraseña(req.body.sanitizedInput.contrasena)
+        }
+
         const organizador = em.create(Organizador, req.body.sanitizedInput)
         await em.flush()
         res.status(201).json({message: 'Organizador creado', data: organizador})
@@ -114,6 +124,10 @@ async function addOrganizador(req: Request, res: Response){
 
 async function addAdministrador(req: Request, res: Response){
     try {
+        if (req.body.sanitizedInput.contrasena) {
+            req.body.sanitizedInput.contrasena = await serviceAutenticacion.hashContraseña(req.body.sanitizedInput.contrasena)
+        }
+
         const administrador = em.create(Administrador, req.body.sanitizedInput)
         await em.flush()
         res.status(201).json({message: 'Administrador creado', data: administrador})

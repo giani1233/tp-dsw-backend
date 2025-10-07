@@ -16,7 +16,9 @@ Content-Type: application/json
     "cuposDisponibles": 20000,
     "claseEvento": 1,
     "organizador": 2,
-    "direccion": 2
+    "direccion": 2, 
+    "estado": "aceptado",
+    "destacado": false
 }
 
 ### ID

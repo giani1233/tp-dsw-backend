@@ -11,6 +11,7 @@ import { rutaPago } from './entrada/rutas.pago.js'
 import { rutaDireccion } from './direccion/rutas.direccion.js'
 import { rutaLocalidad } from './direccion/rutas.localidad.js'
 import { rutaProvincia } from './direccion/rutas.provincia.js'
+import { rutaAutenticacion } from './autenticacion/rutas.autenticacion.js'
 
 const app = express()
 app.use(express.json())
@@ -33,6 +34,7 @@ app.use('/api/pagos', rutaPago)
 app.use('/api/direcciones', rutaDireccion)
 app.use('/api/localidades', rutaLocalidad)
 app.use('/api/provincias', rutaProvincia)
+app.use('/api/autenticacion', rutaAutenticacion)
 
 app.use((req, res) => {
     return res.status(404).send({message: 'Ruta no encontrada'})	

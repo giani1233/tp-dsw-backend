@@ -144,13 +144,13 @@ POST http://localhost:3000/api/usuarios/Administrador
 Content-Type: application/json
 
 {
-    "dni": "45454545",
-    "nombre": "Maximo",
-    "apellido": "Gutierrez",
-    "email": "maxiguti12@gmail.com",
-    "telefono": "432345123",
-    "contrasena": "12345",
-    "tipo": "Administrador"
+    "dni": "11114444",
+    "nombre": "Admin",
+    "apellido": "Admin",
+    "email": "admin@gmail.com",
+    "telefono": "11114444",
+    "contrasena": "12345678",
+    "tipo": "administrador"
 }
 
 ### eliminar un administrador
