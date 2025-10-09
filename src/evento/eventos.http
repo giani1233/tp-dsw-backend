@@ -7,13 +7,14 @@ POST http://localhost:3000/api/eventos
 Content-Type: application/json
 
 {
-    "nombre": "fffff",
+    "nombre": "aaa",
     "descripcion": "Fiesta de disfraces en el centro",
     "precioEntrada": 15000,
     "cantidadCupos": 20000,
     "fechaInicio": "2025-12-14",
     "horaInicio": "2025-12-14T19:00:00Z",
     "cuposDisponibles": 20000,
+    "edadMinima" : 18,
     "claseEvento": 1,
     "organizador": 2,
     "direccion": 2, 

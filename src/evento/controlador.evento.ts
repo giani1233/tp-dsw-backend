@@ -85,7 +85,7 @@ async function remove(req: Request, res: Response){
 
 async function findPendientes(req: Request, res: Response) {
     try {
-        const eventos = await em.find(Evento, { estado: 'pendiente' }, { populate: ['claseEvento', 'organizador', 'direccion'] });
+        const eventos = await em.find(Evento, { estado: 'pendiente' }, { populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'] });
         res.status(200).json({ message: 'Eventos pendientes encontrados', data: eventos });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -96,7 +96,7 @@ async function findAprobados(req: Request, res: Response) {
     try {
         const hoyString = new Date().toISOString().split('T')[0];
         const hoy = new Date(hoyString);
-        const eventos = await em.find(Evento, {estado: 'aprobado', fechaInicio: { $gte: hoy }}, {populate: ['claseEvento', 'organizador', 'direccion'], orderBy: { fechaInicio: 'ASC' }});
+        const eventos = await em.find(Evento, {estado: 'aprobado', fechaInicio: { $gte: hoy }}, {populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'], orderBy: { fechaInicio: 'ASC' }});
         res.status(200).json({ message: 'Eventos aprobados encontrados', data: eventos });
     } catch (error: any) {
         console.error(error);
