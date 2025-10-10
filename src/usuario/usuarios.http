@@ -37,9 +37,9 @@ Content-Type: application/json
     "apellido": "Gomez",
     "email": "pablogomez@gmail.com",
     "telefono": "0987321",
-    "contrasena": "54321",
+    "contrasena": "87654321",
     "empresa": "Eventos S.A.",
-    "tipo": "Organizador"
+    "tipo": "organizador"
 }
 
 ### crear un administrador
@@ -48,12 +48,12 @@ POST http://localhost:3000/api/usuarios/Administrador
 Content-Type: application/json
 
 {
-    "dni": "11112222",
+    "dni": "20199830",
     "nombre": "Facundo",
     "apellido": "Aquilante",
     "email": "facundoaquilante@gmail.com",
     "telefono": "09876555",
-    "contrasena": "123231",
+    "contrasena": "12323123",
     "tipo": "Administrador"
 }
 
@@ -109,7 +109,7 @@ Content-Type: application/json
     "apellido": "Gutierrez",
     "email": "maxiguti12@gmail.com",
     "telefono": "432345123",
-    "contrasena": "12345",
+    "contrasena": "12345678",
     "fechaNacimiento": "2004-05-13",
     "tipo": "Cliente"
 }
@@ -129,7 +129,7 @@ Content-Type: application/json
     "apellido": "Gutierrez",
     "email": "maxiguti12@gmail.com",
     "telefono": "432345123",
-    "contrasena": "12345",
+    "contrasena": "12345678",
     "empresa": "FiestasInfantiles S.A",
     "tipo": "Organizador"
 }
