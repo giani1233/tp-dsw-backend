@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { sanitizeUsuarioInput, findAll, findAllClientes, findAllOrganizadores, findAllAdministradores, findOneCliente, findOneOrganizador, findOneAdministrador, addCliente, addOrganizador, addAdministrador, updateCliente, updateOrganizador, updateAdministrador, removeCliente, removeOrganizador, removeAdministrador } from './controlador.usuario.js';
+import { sanitizeUsuarioInput, findAll, findAllClientes, findAllOrganizadores, findAllAdministradores, findOneCliente, findOneOrganizador, findOneAdministrador, addCliente, addOrganizador, addAdministrador, updateCliente, updateOrganizador, updateAdministrador, removeCliente, removeOrganizador, removeAdministrador, getByFilter } from './controlador.usuario.js';
 
 export const rutaUsuario = Router();
 
+rutaUsuario.get('/filtro', getByFilter)
 rutaUsuario.get('/', findAll)
 rutaUsuario.get('/Cliente', findAllClientes)
 rutaUsuario.get('/Organizador', findAllOrganizadores)

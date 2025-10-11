@@ -177,6 +177,7 @@ async function removeCliente(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const cliente = em.getReference(Cliente, id)
         await em.removeAndFlush(cliente)
+        res.status(201).json({message: 'Cliente eliminado', data: cliente})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }
@@ -187,6 +188,7 @@ async function removeOrganizador(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const organizador = em.getReference(Organizador, id)
         await em.removeAndFlush(organizador)
+        res.status(201).json({message: 'Organizador eliminado', data: organizador})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }
@@ -197,9 +199,30 @@ async function removeAdministrador(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const administrador = em.getReference(Administrador, id)
         await em.removeAndFlush(administrador)
+        res.status(201).json({message: 'Administrador eliminado', data: administrador})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }
 }
 
-export { sanitizeUsuarioInput, findAll, findAllClientes, findAllOrganizadores, findAllAdministradores, findOneCliente, findOneOrganizador, findOneAdministrador, addCliente, addOrganizador, addAdministrador, updateCliente, updateOrganizador, updateAdministrador, removeCliente, removeOrganizador, removeAdministrador };
+async function getByFilter(req: Request, res: Response) {
+    try {
+        const busqueda = (req.query.busqueda as string)?.trim() || ''
+        if (!busqueda) {
+            const usuarios = await em.find(Usuario, {})
+            return res.status(200).json({ message: 'Usuarios encontrados', data: usuarios })
+        }
+        const usuarios = await em.find(Usuario,{
+            $or : [
+            {nombre: {$like: `%${busqueda}%`}},
+            {apellido: {$like: `%${busqueda}%`}},
+            {email: {$like: `%${busqueda}%`}}
+        ]
+        })
+        res.status(200).json({ message: 'Usuarios encontrados', data: usuarios })
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { sanitizeUsuarioInput, findAll, findAllClientes, findAllOrganizadores, findAllAdministradores, findOneCliente, findOneOrganizador, findOneAdministrador, addCliente, addOrganizador, addAdministrador, updateCliente, updateOrganizador, updateAdministrador, removeCliente, removeOrganizador, removeAdministrador, getByFilter };

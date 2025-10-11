@@ -78,6 +78,7 @@ async function remove(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const evento = em.getReference(Evento, id)
         await em.removeAndFlush(evento)
+        res.status(200).json({message: 'Evento eliminado', data: evento})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }
@@ -85,23 +86,42 @@ async function remove(req: Request, res: Response){
 
 async function findPendientes(req: Request, res: Response) {
     try {
-        const eventos = await em.find(Evento, { estado: 'pendiente' }, { populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'] });
+        const filtro = (req.query.filtro as string)?.trim() || '';
+        const where: any = { estado: 'pendiente' };
+        if (filtro) {
+        where.$or = [
+            { nombre: { $like: `%${filtro}%` } }
+        ];
+        }
+        const eventos = await em.find(Evento, where, {
+        populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'],
+        orderBy: { id: 'DESC' },
+        });
         res.status(200).json({ message: 'Eventos pendientes encontrados', data: eventos });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
 }
 
+
 async function findAprobados(req: Request, res: Response) {
     try {
-        const hoyString = new Date().toISOString().split('T')[0];
-        const hoy = new Date(hoyString);
-        const eventos = await em.find(Evento, {estado: 'aprobado', fechaInicio: { $gte: hoy }}, {populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'], orderBy: { fechaInicio: 'ASC' }});
+        const filtro = (req.query.filtro as string)?.trim() || '';
+        const where: any = { estado: 'aprobado' };
+        if (filtro) {
+        where.$or = [
+            { nombre: { $like: `%${filtro}%` } }
+        ];
+        }
+        const eventos = await em.find(Evento, where, {
+        populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'],
+        orderBy: { id: 'DESC' },
+        });
         res.status(200).json({ message: 'Eventos aprobados encontrados', data: eventos });
     } catch (error: any) {
-        console.error(error);
         res.status(500).json({ message: error.message });
     }
 }
+
 
 export { sanitizeEventoInput, findAll, findOne, add, update, remove, findPendientes, findAprobados };

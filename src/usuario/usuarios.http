@@ -16,14 +16,14 @@ POST http://localhost:3000/api/usuarios/Cliente
 Content-Type: application/json
 
 {
-    "dni": "12345672",
+    "dni": "12345678",
     "nombre": "Jorge",
     "apellido": "Chavez",
-    "email": "jorgechavez@gmail.com",
-    "telefono": "156789440",
+    "email": "jorgechav@gmail.com",
+    "telefono": "1567894",
     "contrasena": "12345",
     "fechaNacimiento": "2001-04-02",
-    "tipo": "Cliente"
+    "tipo": "cliente"
 }
 
 ### crear un organizador
@@ -32,11 +32,11 @@ POST http://localhost:3000/api/usuarios/Organizador
 Content-Type: application/json
 
 {
-    "dni": "44447777",
+    "dni": "44447751",
     "nombre": "Pablo",
     "apellido": "Gomez",
-    "email": "pablogomez@gmail.com",
-    "telefono": "0987321",
+    "email": "pablogom@gmail.com",
+    "telefono": "09871",
     "contrasena": "87654321",
     "empresa": "Eventos S.A.",
     "tipo": "organizador"
@@ -54,7 +54,7 @@ Content-Type: application/json
     "email": "facundoaquilante@gmail.com",
     "telefono": "09876555",
     "contrasena": "12323123",
-    "tipo": "Administrador"
+    "tipo": "administrador"
 }
 
 
