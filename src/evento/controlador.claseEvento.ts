@@ -61,4 +61,18 @@ async function remove(req: Request, res: Response){
     }
 }
 
-export { findAll, findOne, add, update, remove };
+async function getByFilter(req: Request, res: Response) {
+    try {
+        const busqueda = (req.query.busqueda as string)?.trim() || ''
+        if (!busqueda) {
+            const clases = await em.find(ClaseEvento, {})
+            return res.status(200).json({ message: 'Clases de evento encontradas', data: clases })
+        }
+        const clases = await em.find(ClaseEvento,{nombre: {$like: `%${busqueda}%`}})
+        res.status(200).json({ message: 'Clases de evento encontradas', data: clases })
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { findAll, findOne, add, update, remove, getByFilter };
