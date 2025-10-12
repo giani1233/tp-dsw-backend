@@ -7,8 +7,8 @@ POST http://localhost:3000/api/provincias
 Content-Type: application/json
 
 {
-    "nombre": "Santa Fe",
-    "codigo": 3
+    "nombre": "Entre Rios",
+    "codigo": 9
 }
 
 ### ID

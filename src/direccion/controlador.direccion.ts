@@ -66,9 +66,24 @@ async function remove(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const direccion = em.getReference(Direccion, id)
         await em.removeAndFlush(direccion)
+        res.status(200).json({message: 'Direccion eliminada'})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }
 }
 
-export { sanitizeDireccionInput, findAll, findOne, add, update, remove };
+async function getByFilter(req: Request, res: Response) {
+    try {
+        const busqueda = (req.query.busqueda as string)?.trim() || ''
+        if (!busqueda) {
+            const direcciones = await em.find(Direccion, {})
+            return res.status(200).json({ message: 'Direcciones encontradas', data: direcciones })
+        }
+        const direcciones = await em.find(Direccion,{calle: {$like: `%${busqueda}%`}}, {populate: ['localidad']})
+        res.status(200).json({ message: 'Direcciones encontradas', data: direcciones })
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { sanitizeDireccionInput, findAll, findOne, add, update, remove, getByFilter };

@@ -65,9 +65,24 @@ async function remove(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const localidad = em.getReference(Localidad, id)
         await em.removeAndFlush(localidad)
+        res.status(200).json({message: 'Localidad eliminada'})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }
 }
+    
+async function getByFilter(req: Request, res: Response) {
+    try {
+        const busqueda = (req.query.busqueda as string)?.trim() || ''
+        if (!busqueda) {
+            const localidades = await em.find(Localidad, {})
+            return res.status(200).json({ message: 'Localidades encontradas', data: localidades })
+        }
+        const localidades = await em.find(Localidad,{nombre: {$like: `%${busqueda}%`}}, {populate: ['provincia']})
+        res.status(200).json({ message: 'Localidades encontradas', data: localidades })
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
-export { sanitizeLocalidadInput, findAll, findOne, add, update, remove };
+export { sanitizeLocalidadInput, findAll, findOne, add, update, remove, getByFilter };

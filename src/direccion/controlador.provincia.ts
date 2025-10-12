@@ -64,9 +64,24 @@ async function remove(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const provincia = em.getReference(Provincia, id)
         await em.removeAndFlush(provincia)
+        res.status(200).json({message: 'Provincia eliminada'})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }
 }
 
-export { sanitizeProvinciaInput, findAll, findOne, add, update, remove };
+async function getByFilter(req: Request, res: Response) {
+    try {
+        const busqueda = (req.query.busqueda as string)?.trim() || ''
+        if (!busqueda) {
+            const provincias = await em.find(Provincia, {})
+            return res.status(200).json({ message: 'Provincias encontradas', data: provincias })
+        }
+        const provincias = await em.find(Provincia,{nombre: {$like: `%${busqueda}%`}})
+        res.status(200).json({ message: 'Provincias encontradas', data: provincias })
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { sanitizeProvinciaInput, findAll, findOne, add, update, remove, getByFilter };
