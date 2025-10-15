@@ -123,5 +123,23 @@ async function findAprobados(req: Request, res: Response) {
     }
 }
 
+async function findDestacados(req: Request, res: Response) {
+    try {
+        const filtro = (req.query.filtro as string)?.trim() || '';
+        const where: any = { estado: 'aprobado', destacado: true };
+        if (filtro) {
+        where.$or = [
+            { nombre: { $like: `%${filtro}%` } }
+        ];
+        }
+        const eventos = await em.find(Evento, where, {
+        populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'],
+        orderBy: { id: 'DESC' },
+        });
+        res.status(200).json({ message: 'Eventos destacados encontrados', data: eventos });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
-export { sanitizeEventoInput, findAll, findOne, add, update, remove, findPendientes, findAprobados };
+export { sanitizeEventoInput, findAll, findOne, add, update, remove, findPendientes, findAprobados, findDestacados };

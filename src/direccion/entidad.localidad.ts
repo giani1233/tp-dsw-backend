@@ -2,7 +2,6 @@ import { Cascade, Entity, ManyToOne, Property, Rel, ManyToMany, Collection, OneT
 import { EntidadBase } from "../shared/db/entidad.entidadBase.js";
 import { Direccion } from "./entidad.direccion.js";
 import { Provincia } from "./entidad.provincia.js";
-import { triggerAsyncId } from "async_hooks";
 
 @Entity()
 export class Localidad extends EntidadBase {
