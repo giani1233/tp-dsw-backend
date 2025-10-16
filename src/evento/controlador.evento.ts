@@ -142,4 +142,24 @@ async function findDestacados(req: Request, res: Response) {
     }
 }
 
-export { sanitizeEventoInput, findAll, findOne, add, update, remove, findPendientes, findAprobados, findDestacados };
+async function findPorOrganizador(req: Request, res: Response) {
+    try {
+        const idOrganizador = Number(req.params.idOrganizador);
+        if (isNaN(idOrganizador)) {
+            return res.status(400).json({ message: 'ID de organizador inválido' });
+        }
+        const eventos = await em.find(Evento, {
+            estado: 'pendiente',
+            organizador: idOrganizador
+        }, {
+            populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'],
+            orderBy: { id: 'DESC' },
+        });
+        res.status(200).json({ message: 'Eventos pendientes del organizador encontrados', data: eventos });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
+export { sanitizeEventoInput, findAll, findOne, add, update, remove, findPendientes, findAprobados, findDestacados, findPorOrganizador };

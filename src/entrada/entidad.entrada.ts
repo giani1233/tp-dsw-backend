@@ -2,7 +2,7 @@ import { Cascade, Entity, ManyToOne, Property, Rel, ManyToMany, OneToOne } from 
 import { EntidadBase } from "../shared/db/entidad.entidadBase.js";
 import { Evento } from "../evento/entidad.evento.js";
 import { Cliente } from "../usuario/entidad.usuario.js";
-import { Pago } from "./entidad.pago.js";
+import { Pago } from "../pagos/entidad.pago.js";
 
 @Entity()
 export class Entrada extends EntidadBase {
