@@ -85,4 +85,20 @@ async function getByFilter(req: Request, res: Response) {
     }
 }
 
-export { sanitizeLocalidadInput, findAll, findOne, add, update, remove, getByFilter };
+async function findByProvincia(req: Request, res: Response) {
+    try {
+        const provinciaId = Number.parseInt(req.params.provinciaId);
+        if (isNaN(provinciaId)) {
+        return res.status(400).json({ message: 'ID de provincia inválido', data: [] });
+        }
+        const localidades = await em.find(Localidad, { provincia: provinciaId }, { populate: ['provincia'] });
+        res.status(200).json({ 
+        message: localidades.length > 0 ? 'Localidades encontradas' : 'No hay localidades para esta provincia',
+        data: localidades 
+        });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message, data: [] });
+    }
+}
+
+export { sanitizeLocalidadInput, findAll, findOne, add, update, remove, getByFilter, findByProvincia };

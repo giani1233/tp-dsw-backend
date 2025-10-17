@@ -1,6 +1,7 @@
 import e, { Request, Response, NextFunction, request } from 'express';
 import { Direccion } from './entidad.direccion.js';
 import { orm } from '../shared/db/orm.js';
+import { Localidad } from './entidad.localidad.js';
 
 const em = orm.em
 
@@ -86,4 +87,21 @@ async function getByFilter(req: Request, res: Response) {
     }
 }
 
-export { sanitizeDireccionInput, findAll, findOne, add, update, remove, getByFilter };
+async function findByLocalidad(req: Request, res: Response) {
+    try {
+        const localidadId = Number.parseInt(req.params.localidadId);
+        if (isNaN(localidadId)) {
+        return res.status(400).json({ message: 'ID de localidad inválido', data: [] });
+        }
+        const direcciones = await em.find(Direccion, { localidad: localidadId }, { populate: ['localidad'] });
+        res.status(200).json({
+        message: direcciones.length > 0 ? 'Direcciones encontradas' : 'No hay direcciones para esta localidad',
+        data: direcciones
+        });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message, data: [] });
+    }
+}
+
+
+export { sanitizeDireccionInput, findAll, findOne, add, update, remove, getByFilter, findByLocalidad };
