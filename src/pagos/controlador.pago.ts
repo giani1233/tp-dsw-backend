@@ -69,6 +69,7 @@ async function crearPreferenciaMP(req: Request, res: Response){
 
 
 async function recibirNotificacionMP(req: Request, res: Response){
+    console.log('Notificación recibida:', req.body);
     try {
         const data = req.body
 
