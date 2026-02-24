@@ -50,12 +50,12 @@ async function crearPreferenciaMP(req: Request, res: Response){
                     }
                 ],
                 back_urls: {
-                    success: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/success/',
-                    failure: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/failure/',
-                    pending: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/pending/',
+                    success: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/api/pagos/success/',
+                    failure: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/api/pagos/failure/',
+                    pending: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/api/pagos/pending/',
                 },
                 auto_return: 'approved',
-                notification_url: 'http://localhost:3000/api/pagos/notificacion',
+                notification_url: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/api/pagos/notificacion',
                 metadata: { idEvento, idUsuario }
             }
         });
@@ -74,11 +74,11 @@ async function recibirNotificacionMP(req: Request, res: Response){
         const data = req.body
 
         if(data.action === 'payment.created' || data.action === 'payment.updated'){
-            const pagoData = data.data
+            const pagoMp = await paymentService.get({ id: data.data.id });
             
-            if (pagoData.status === 'approved') {
-                const idEvento = pagoData.metadata.idEvento;   
-                const idUsuario = pagoData.metadata.idUsuario;
+            if (pagoMp.status === 'approved') {
+                const idEvento = pagoMp.metadata.id_evento;   
+                const idUsuario = pagoMp.metadata.id_usuario;
                 const evento = await em.findOneOrFail(Evento, { id: idEvento });
                 const usuario = await em.findOneOrFail(Usuario, { id: idUsuario });
 
@@ -91,7 +91,7 @@ async function recibirNotificacionMP(req: Request, res: Response){
                 await em.flush();
                 const nuevoPago = em.create(Pago, {
                     fechaPago: new Date(),
-                    monto: pagoData.transaction_amount,
+                    monto: pagoMp.transaction_amount ?? 0,
                     entrada: entrada
                 });
                 await em.flush();
