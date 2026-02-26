@@ -15,10 +15,10 @@ export class Direccion extends EntidadBase {
     @Property({nullable: true})
     detalles ?: string
 
-    @Property({nullable: true})
+    @Property({nullable: true, type: 'decimal', precision: 10, scale: 6})
     lat!: number
 
-    @Property({nullable: true})
+    @Property({nullable: true, type: 'decimal', precision: 10, scale: 6})
     lng!: number 
 
     @OneToMany(() => Evento, evento => evento.direccion, {cascade: [Cascade.ALL]})

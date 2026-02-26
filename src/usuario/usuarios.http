@@ -48,12 +48,12 @@ POST http://localhost:3000/api/usuarios/Administrador
 Content-Type: application/json
 
 {
-    "dni": "20199830",
-    "nombre": "Facundo",
-    "apellido": "Aquilante",
-    "email": "facundoaquilante@gmail.com",
-    "telefono": "09876555",
-    "contrasena": "12323123",
+    "dni": "11111111",
+    "nombre": "Admin",
+    "apellido": "Admin",
+    "email": "admin@gmail.com",
+    "telefono": "123415123",
+    "contrasena": "12345678",
     "tipo": "administrador"
 }
 
