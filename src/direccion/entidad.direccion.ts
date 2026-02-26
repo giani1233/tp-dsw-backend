@@ -15,6 +15,12 @@ export class Direccion extends EntidadBase {
     @Property({nullable: true})
     detalles ?: string
 
+    @Property({nullable: true})
+    lat!: number
+
+    @Property({nullable: true})
+    lng!: number 
+
     @OneToMany(() => Evento, evento => evento.direccion, {cascade: [Cascade.ALL]})
     eventos = new Collection<Evento>(this)
 
