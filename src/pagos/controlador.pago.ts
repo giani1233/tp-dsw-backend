@@ -4,7 +4,7 @@ import { orm } from '../shared/db/orm.js';
 import { MercadoPagoConfig, Payment, Preference } from 'mercadopago'
 import { Entrada } from '../entrada/entidad.entrada.js'
 import { Evento } from '../evento/entidad.evento.js';
-import { Usuario } from '../usuario/entidad.usuario.js';
+import { Cliente } from '../usuario/entidad.usuario.js';
 
 const em = orm.em
 
@@ -80,12 +80,12 @@ async function recibirNotificacionMP(req: Request, res: Response){
                 const idEvento = pagoMp.metadata.id_evento;   
                 const idUsuario = pagoMp.metadata.id_usuario;
                 const evento = await em.findOneOrFail(Evento, { id: idEvento });
-                const usuario = await em.findOneOrFail(Usuario, { id: idUsuario });
+                const cliente = await em.findOneOrFail(Cliente, { id: idUsuario });
 
                 const entrada = em.create(Entrada, {
                     estado: 'adquirida',
-                    evento: evento,
-                    cliente: usuario
+                    evento,
+                    cliente,
                 });
 
                 await em.flush();
