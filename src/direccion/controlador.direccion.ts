@@ -11,7 +11,9 @@ function sanitizeDireccionInput(req: Request, res: Response, next: NextFunction)
         calle: req.body.calle,
         altura: req.body.altura,
         detalles: req.body.detalles,
-        localidad: req.body.localidad
+        localidad: req.body.localidad,
+        lat: req.body.lat,
+        lng: req.body.lng
     }
     Object.keys(req.body.sanitizedInput).forEach(key => {
         if(req.body.sanitizedInput[key] === undefined){
