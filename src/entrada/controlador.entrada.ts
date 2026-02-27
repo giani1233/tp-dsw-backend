@@ -70,5 +70,31 @@ async function remove(req: Request, res: Response){
     }
 }
 
-export { sanitizeEntradaInput, findAll, findOne, add, update, remove }; 
+async function findByCliente(req: Request, res: Response) {
+    try {
+        const idCliente = Number.parseInt(req.params.idCliente);
+        const entradas = await em.find(Entrada, { cliente: idCliente, estado: 'adquirida' }, { populate: ['evento', 'cliente'] });
+        res.status(200).json({ message: 'Entradas encontradas para el cliente', data: entradas });
+    } catch (error: any) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+async function reembolsarEntrada(req: Request, res: Response){
+    try {
+        const id = Number.parseInt(req.params.id)
+        const entrada = await em.findOneOrFail(Entrada, { id }, {populate: ['evento']})
+        if (entrada.estado === 'reembolsada') {
+            return res.status(400).json({ message: 'Esta entrada ya fue reembolsada' })
+        }
+        entrada.estado = 'reembolsada'
+        entrada.evento.cuposDisponibles += 1
+        await em.flush()
+        res.status(200).json({ message: 'Entrada reembolsada', data: entrada })
+    } catch (error: any) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+export { sanitizeEntradaInput, findAll, findOne, add, update, remove, findByCliente, reembolsarEntrada }; 
 
