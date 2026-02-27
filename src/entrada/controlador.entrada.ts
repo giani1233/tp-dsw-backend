@@ -1,8 +1,47 @@
 import e, { Request, Response, NextFunction, request } from 'express'; 
 import { Entrada } from './entidad.entrada.js';
 import { orm } from '../shared/db/orm.js';
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+    host: 'sandbox.smtp.mailtrap.io',
+    port: 2525,
+    auth: {
+        user: 'cd6a1065880c60',
+        pass: '12708818074e88'
+    }
+})
 
 const em = orm.em;
+
+async function enviarMailReembolso(cliente: any, evento: any) {
+    const fechaEvento = new Date(evento.fechaInicio).toLocaleDateString('es-AR', {
+        day: 'numeric', month: 'long', year: 'numeric'
+    })
+
+    await transporter.sendMail({
+        from: '"tp dsw eventos" <noreply@tpdsweventos.com>',
+        to: cliente.email,
+        subject: `Reembolso procesado: ${evento.nombre}`,
+        html: `
+            <h2>Tu reembolso fue procesado</h2>
+            <p>Hola <strong>${cliente.nombre} ${cliente.apellido}</strong>,</p>
+            <p>Tu entrada para el siguiente evento fue reembolsada exitosamente:</p>
+            <table style="border-collapse: collapse; width: 100%">
+                <tr>
+                    <td style="padding: 8px; font-weight: bold;">Evento</td>
+                    <td style="padding: 8px;">${evento.nombre}</td>
+                </tr>
+                <tr style="background: #f5f5f5">
+                    <td style="padding: 8px; font-weight: bold;">Fecha</td>
+                    <td style="padding: 8px;">${fechaEvento}</td>
+                </tr>
+            </table>
+            <p>Próximamente el dinero se acreditara en tu billetera virtual</p>
+            <p style="margin-top: 20px;">Si tenés alguna duda, comunicate con nosotros.</p>
+        `
+    })
+}
 
 function sanitizeEntradaInput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -83,13 +122,19 @@ async function findByCliente(req: Request, res: Response) {
 async function reembolsarEntrada(req: Request, res: Response){
     try {
         const id = Number.parseInt(req.params.id)
-        const entrada = await em.findOneOrFail(Entrada, { id }, {populate: ['evento']})
+        const entrada = await em.findOneOrFail(Entrada, { id }, {populate: ['evento', 'cliente']})
         if (entrada.estado === 'reembolsada') {
             return res.status(400).json({ message: 'Esta entrada ya fue reembolsada' })
         }
         entrada.estado = 'reembolsada'
         entrada.evento.cuposDisponibles += 1
         await em.flush()
+        try {
+            await enviarMailReembolso(entrada.cliente, entrada.evento)
+            console.log('Mail de reembolso enviado a:', entrada.cliente.email)
+        } catch (mailError) {
+            console.error('Error enviando mail de reembolso:', mailError)
+        }
         res.status(200).json({ message: 'Entrada reembolsada', data: entrada })
     } catch (error: any) {
         res.status(500).json({ message: error.message })
