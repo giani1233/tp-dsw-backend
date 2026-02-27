@@ -9,7 +9,7 @@ export class Provincia extends EntidadBase {
     nombre !: string
 
     @Property({nullable: false, unique: true})
-    codigo !: number
+    codigo !: string
 
     @OneToMany(() => Localidad, localidad => localidad.provincia, {cascade: [Cascade.ALL]})
     localidades = new Collection<Localidad>(this)
