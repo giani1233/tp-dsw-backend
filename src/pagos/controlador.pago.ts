@@ -5,6 +5,7 @@ import { MercadoPagoConfig, Payment, Preference } from 'mercadopago'
 import { Entrada } from '../entrada/entidad.entrada.js'
 import { Evento } from '../evento/entidad.evento.js';
 import { Cliente } from '../usuario/entidad.usuario.js';
+import nodemailer from 'nodemailer';
 
 const em = orm.em
 
@@ -12,6 +13,52 @@ const mpclient = new MercadoPagoConfig({
     accessToken: process.env.MP_ACCESS_TOKEN || "APP_USR-3257636109634727-101615-572da9859e58c5a8997772003e1cd710-2930382396"
 })
 const paymentService = new Payment(mpclient)
+
+const transporter = nodemailer.createTransport({
+    host: 'sandbox.smtp.mailtrap.io',
+    port: 2525,
+    auth: {
+        user: 'cd6a1065880c60',
+        pass: '12708818074e88'
+    }
+})
+
+async function enviarMailConfirmacion(cliente: any, evento: any) {
+    const fechaEvento = new Date(evento.fechaInicio).toLocaleDateString('es-AR', {
+        day: 'numeric', month: 'long', year: 'numeric'
+    })
+    const horaEvento = new Date(evento.horaInicio).toLocaleTimeString('es-AR', {
+        hour: '2-digit', minute: '2-digit'
+    })
+    await transporter.sendMail({
+        from: '"tp dsw eventos" <noreply@tpdsweventos.com>',
+        to: cliente.email,
+        subject: `✅ Entrada confirmada: ${evento.nombre}`,
+        html: `
+            <h2>¡Tu entrada fue confirmada!</h2>
+            <p>Hola <strong>${cliente.nombre} ${cliente.apellido}</strong>,</p>
+            <p>Tu compra fue procesada exitosamente. Acá están los detalles:</p>
+            <table style="border-collapse: collapse; width: 100%">
+                <tr>
+                    <td style="padding: 8px; font-weight: bold;">Evento</td>
+                    <td style="padding: 8px;">${evento.nombre}</td>
+                </tr>
+                <tr style="background: #f5f5f5">
+                    <td style="padding: 8px; font-weight: bold;">Fecha</td>
+                    <td style="padding: 8px;">${fechaEvento}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; font-weight: bold;">Hora</td>
+                    <td style="padding: 8px;">${horaEvento}hs</td>
+                </tr>
+                <tr style="background: #f5f5f5">
+                    <td style="padding: 8px; font-weight: bold;">Dirección</td>
+                    <td style="padding: 8px;">${evento.direccion?.calle} ${evento.direccion?.altura}, ${evento.direccion?.localidad?.nombre}</td>
+                </tr>
+            </table>
+            <p style="margin-top: 20px;">¡Nos vemos en el evento!</p>`
+    })
+}
 
 function sanitizePagoinput(req: Request, res: Response, next: NextFunction) {
     req.body.sanitizedInput = {
@@ -84,7 +131,7 @@ async function recibirNotificacionMP(req: Request, res: Response){
             if (pagoMp.status === 'approved') {
                 const idEvento = pagoMp.metadata.id_evento;   
                 const idUsuario = pagoMp.metadata.id_usuario;
-                const evento = await em.findOneOrFail(Evento, { id: idEvento });
+                const evento = await em.findOneOrFail(Evento, { id: idEvento }, { populate: ['direccion', 'direccion.localidad'] });
                 const cliente = await em.findOneOrFail(Cliente, { id: idUsuario });
 
                 if (evento.cuposDisponibles <= 0) {
@@ -106,6 +153,12 @@ async function recibirNotificacionMP(req: Request, res: Response){
                     entrada: entrada
                 });
                 await em.flush();
+                try {
+                    await enviarMailConfirmacion(cliente, evento)
+                    console.log('Mail enviado a:', cliente.email)
+                } catch (mailError) {
+                    console.error('Error enviando mail:', mailError)
+                }
             }
         }
         res.status(200).json({ message: 'Notificación recibida' });
