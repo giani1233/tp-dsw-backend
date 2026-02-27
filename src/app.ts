@@ -12,6 +12,7 @@ import { rutaDireccion } from './direccion/rutas.direccion.js'
 import { rutaLocalidad } from './direccion/rutas.localidad.js'
 import { rutaProvincia } from './direccion/rutas.provincia.js'
 import { rutaAutenticacion } from './autenticacion/rutas.autenticacion.js'
+import { iniciarJobRecordatorio } from './shared/jobs/recordatorioEvento.job.js'
 
 const app = express()
 app.use(express.json())
@@ -41,6 +42,8 @@ app.use((req, res) => {
 })
 
 await syncSchema()
+
+iniciarJobRecordatorio()
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000')
