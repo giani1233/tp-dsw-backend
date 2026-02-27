@@ -1,11 +1,12 @@
 import { MikroORM } from "@mikro-orm/core";
 import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
+import { MySqlDriver } from "@mikro-orm/mysql";
 
 export const orm = await MikroORM.init({
     entities: ['dist/**/entidad.*.js'],
     entitiesTs: ['src/**/entidad.*.ts'],
     dbName: 'hc4gmo', 
-    type : 'mysql',
+    driver: MySqlDriver,
     password: '1234',
     clientUrl: 'mysql://dsw:dsw@localhost:3306/hc4gmo',
     highlighter: new SqlHighlighter(),
