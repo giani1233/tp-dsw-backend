@@ -36,6 +36,11 @@ async function crearPreferenciaMP(req: Request, res: Response){
             return res.status(400).json({ message: 'Faltan datos obligatorios' });
         }
 
+        const evento = await em.findOneOrFail(Evento, { id: idEvento });
+        if (evento.cuposDisponibles <= 0) {
+            return res.status(400).json({ message: 'No hay cupos disponibles para este evento' });
+        }
+
         const preferencia = new Preference(mpclient);
 
         const result = await preferencia.create({
@@ -82,11 +87,17 @@ async function recibirNotificacionMP(req: Request, res: Response){
                 const evento = await em.findOneOrFail(Evento, { id: idEvento });
                 const cliente = await em.findOneOrFail(Cliente, { id: idUsuario });
 
+                if (evento.cuposDisponibles <= 0) {
+                    return res.status(400).json({ message: 'No hay cupos disponibles para este evento' });
+                }
+
                 const entrada = em.create(Entrada, {
                     estado: 'adquirida',
                     evento,
                     cliente,
                 });
+
+                evento.cuposDisponibles -= 1;
 
                 await em.flush();
                 const nuevoPago = em.create(Pago, {
