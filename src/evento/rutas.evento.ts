@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { sanitizeEventoInput, findAll, findOne, add, update, remove, findAprobados, findPendientes, findDestacados, findPorOrganizador } from "./controlador.evento.js";
+import { sanitizeEventoInput, findAll, findOne, add, update, remove, findAprobados, findPendientes, findDestacados, findPorOrganizador, findAprobadosParaMapa } from "./controlador.evento.js";
 
 export const rutaEvento = Router();
 
 rutaEvento.get('/', findAll)
 rutaEvento.get('/organizador/:idOrganizador', findPorOrganizador)
+rutaEvento.get('/aprobados-para-mapa', findAprobadosParaMapa)
 rutaEvento.get('/pendientes', findPendientes)
 rutaEvento.get('/aprobados', findAprobados)
 rutaEvento.get('/destacados', findDestacados)

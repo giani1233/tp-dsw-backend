@@ -107,7 +107,8 @@ async function findPendientes(req: Request, res: Response) {
 async function findAprobados(req: Request, res: Response) {
     try {
         const filtro = (req.query.filtro as string)?.trim() || '';
-        const where: any = { estado: 'aprobado' };
+        const ahora = new Date();
+        const where: any = { estado: 'aprobado', fechaInicio: { $gte: ahora } };
         if (filtro) {
         where.$or = [
             { nombre: { $like: `%${filtro}%` } }
@@ -126,7 +127,8 @@ async function findAprobados(req: Request, res: Response) {
 async function findDestacados(req: Request, res: Response) {
     try {
         const filtro = (req.query.filtro as string)?.trim() || '';
-        const where: any = { estado: 'aprobado', destacado: true };
+        const ahora = new Date();
+        const where: any = { estado: 'aprobado', destacado: true, fechaInicio: { $gte: ahora }  };
         if (filtro) {
         where.$or = [
             { nombre: { $like: `%${filtro}%` } }
@@ -149,17 +151,51 @@ async function findPorOrganizador(req: Request, res: Response) {
             return res.status(400).json({ message: 'ID de organizador inválido' });
         }
         const eventos = await em.find(Evento, {
-            estado: 'pendiente',
             organizador: idOrganizador
         }, {
             populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'],
             orderBy: { id: 'DESC' },
         });
-        res.status(200).json({ message: 'Eventos pendientes del organizador encontrados', data: eventos });
+        res.status(200).json({ message: 'Eventos del organizador encontrados', data: eventos });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
 }
 
+async function findAprobadosParaMapa(req: Request, res: Response) {
+    try {
+        const ahora = new Date();
+        const eventos = await em.find(Evento, { estado: 'aprobado', fechaInicio: { $gte: ahora } }, {populate: ['claseEvento', 'organizador', 'direccion', 'direccion.localidad'], orderBy: { id: 'DESC' }});
+        const agrupados = new Map<number, any>();
+        for (const evento of eventos) {
+            const dir = evento.direccion;
+            if (!dir || dir.id == null) continue;
+            if (!agrupados.has(dir.id)) {
+                agrupados.set(dir.id, {
+                    direccionId: dir.id, 
+                    latitud: dir.lat,
+                    longitud: dir.lng,
+                    calle: dir.calle,
+                    altura: dir.altura,
+                    localidad: dir.localidad?.nombre,
+                    eventos: [],
+                })
+            }
+            agrupados.get(dir.id).eventos.push({
+                id: evento.id,
+                nombre: evento.nombre,
+                descripcion: evento.descripcion,
+                fechaInicio: evento.fechaInicio,
+                horaInicio: evento.horaInicio,
+                horaFin: evento.horaFin,
+                clase: evento.claseEvento?.nombre,
+            })
+        } 
+        const resultado = Array.from(agrupados.values());
+        res.status(200).json({ message: 'Eventos agrupados por dirección encontrados', data: resultado });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
-export { sanitizeEventoInput, findAll, findOne, add, update, remove, findPendientes, findAprobados, findDestacados, findPorOrganizador };
+export { sanitizeEventoInput, findAll, findOne, add, update, remove, findPendientes, findAprobados, findDestacados, findPorOrganizador, findAprobadosParaMapa };
