@@ -10,18 +10,18 @@ import nodemailer from 'nodemailer';
 const em = orm.em
 
 const mpclient = new MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN || "APP_USR-3257636109634727-101615-572da9859e58c5a8997772003e1cd710-2930382396"
-})
+    accessToken: process.env.MP_ACCESS_TOKEN!
+});
 const paymentService = new Payment(mpclient)
 
 const transporter = nodemailer.createTransport({
-    host: 'sandbox.smtp.mailtrap.io',
-    port: 2525,
+    host: process.env.EMAIL_HOST || 'sandbox.smtp.mailtrap.io',
+    port: Number(process.env.EMAIL_PORT) || 2525,
     auth: {
-        user: 'cd6a1065880c60',
-        pass: '12708818074e88'
+        user: process.env.EMAIL_USER!,
+        pass: process.env.EMAIL_PASS!
     }
-})
+});
 
 async function enviarMailConfirmacion(cliente: any, evento: any) {
     const fechaEvento = new Date(evento.fechaInicio).toLocaleDateString('es-AR', {

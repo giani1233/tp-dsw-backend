@@ -5,13 +5,13 @@ import { Entrada } from '../../entrada/entidad.entrada.js';
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
-    host: 'sandbox.smtp.mailtrap.io',
-    port: 2525,
+    host: process.env.EMAIL_HOST || 'sandbox.smtp.mailtrap.io',
+    port: Number(process.env.EMAIL_PORT) || 2525,
     auth: {
-        user: 'cd6a1065880c60',
-        pass: '12708818074e88'
+        user: process.env.EMAIL_USER!,
+        pass: process.env.EMAIL_PASS!
     }
-})
+});
 
 async function enviarMailRecordatorio(cliente: any, evento: any) {
     const fechaEvento = new Date(evento.fechaInicio).toLocaleDateString('es-AR', {

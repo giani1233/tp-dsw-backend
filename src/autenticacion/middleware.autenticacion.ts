@@ -16,7 +16,7 @@ export function verificarToken(req: Request, res: Response, next: NextFunction) 
     try {
         const verificado = jwt.verify(
             token,
-            process.env.JWT_SECRET || "clave_jwt_eventos_provisoria"
+            process.env.JWT_SECRET!
         ) as JwtPayload;
         (req as any).usuario = verificado;
         next();
