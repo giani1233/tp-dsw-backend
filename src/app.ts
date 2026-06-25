@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 })
 
 app.use(cors({
-    origin: "http://localhost:5173", 
+    origin: ["http://localhost:5173", "https://tp-dsw-eventos.vercel.app/"], 
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
