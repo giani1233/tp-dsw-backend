@@ -102,12 +102,12 @@ async function crearPreferenciaMP(req: Request, res: Response){
                     }
                 ],
                 back_urls: {
-                    success: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/api/pagos/success/',
-                    failure: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/api/pagos/failure/',
-                    pending: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/api/pagos/pending/',
+                    success: 'https://tp-dsw-backend-yjx3.onrender.com/api/pagos/success/',
+                    failure: 'https://tp-dsw-backend-yjx3.onrender.com/api/pagos/failure/',
+                    pending: 'https://tp-dsw-backend-yjx3.onrender.com/api/pagos/pending/',
                 },
                 auto_return: 'approved',
-                notification_url: 'https://arrhythmical-marcene-preeternal.ngrok-free.dev/api/pagos/notificacion',
+                notification_url: 'https://tp-dsw-backend-yjx3.onrender.com/api/pagos/notificacion',
                 metadata: { idEvento, idUsuario }
             }
         });

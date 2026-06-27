@@ -4,13 +4,13 @@ import { sanitizePagoinput, findAll, findOne, add, update, remove, crearPreferen
 export const rutaPago = Router();
 
 rutaPago.get('/success', (req, res) => {
-    res.redirect(`http://localhost:5173/success?${new URLSearchParams(req.query as any).toString()}`);
+    res.redirect(`https://tp-dsw-eventos.vercel.app/success?${new URLSearchParams(req.query as any).toString()}`);
 });
 rutaPago.get('/failure', (req, res) => {
-    res.redirect(`http://localhost:5173/failure?${new URLSearchParams(req.query as any).toString()}`);
+    res.redirect(`https://tp-dsw-eventos.vercel.app/failure?${new URLSearchParams(req.query as any).toString()}`);
 });
 rutaPago.get('/pending', (req, res) => {
-    res.redirect(`http://localhost:5173/pending?${new URLSearchParams(req.query as any).toString()}`);
+    res.redirect(`https://tp-dsw-eventos.vercel.app/pending?${new URLSearchParams(req.query as any).toString()}`);
 });
 rutaPago.get('/', findAll);
 rutaPago.get('/:id', findOne);
