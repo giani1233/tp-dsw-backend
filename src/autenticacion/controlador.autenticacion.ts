@@ -17,16 +17,8 @@ export class ControladorAutenticacion {
             const serviceAutenticacion = new ServiceAutenticacion(em)
             const {token, usuario} = await serviceAutenticacion.login(email, contrasena)
 
-            res.json({
-                token,
-                usuario: {
-                    id: usuario.id, 
-                    nombre: usuario.nombre, 
-                    email: usuario.email,
-                    tipo: usuario.tipo,
-                    apellido: usuario.apellido
-                }
-            })
+            res.json({ token })
+            
         } catch (error:any) {
             res.status(401).json({ message: error.message })
         }
