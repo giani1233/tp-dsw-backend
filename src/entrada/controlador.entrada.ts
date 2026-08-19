@@ -1,6 +1,7 @@
-import e, { Request, Response, NextFunction, request } from 'express'; 
+import { Request, Response, NextFunction } from 'express'; 
 import { Entrada } from './entidad.entrada.js';
 import { orm } from '../shared/db/orm.js';
+import { EntradaSchema } from '../shared/schemas.js';
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
@@ -44,18 +45,13 @@ async function enviarMailReembolso(cliente: any, evento: any) {
 }
 
 function sanitizeEntradaInput(req: Request, res: Response, next: NextFunction) {
-    req.body.sanitizedInput = {
-        id: req.body.id,
-        estado: req.body.estado,
-        evento: req.body.evento,
-        cliente: req.body.cliente
+    const schema = req.method === 'POST' ? EntradaSchema : EntradaSchema.partial()
+    const result = schema.safeParse(req.body)
+    if (!result.success) {
+        return res.status(400).json({ message: 'Datos inválidos', errors: result.error.flatten().fieldErrors })
     }
-    Object.keys(req.body.sanitizedInput).forEach(key => {
-        if (req.body.sanitizedInput[key] === undefined) {
-            delete req.body.sanitizedInput[key]
-        }
-    })
-    next();
+    req.body.sanitizedInput = result.data
+    next()
 }
 
 async function findAll(req: Request, res: Response){

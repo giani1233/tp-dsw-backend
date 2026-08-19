@@ -1,27 +1,20 @@
-import e, { Request, Response, NextFunction, request } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Direccion } from './entidad.direccion.js';
 import { orm } from '../shared/db/orm.js';
-import { Localidad } from './entidad.localidad.js';
+import { DireccionSchema } from '../shared/schemas.js';
 
 const em = orm.em
 
 function sanitizeDireccionInput(req: Request, res: Response, next: NextFunction){
-    req.body.sanitizedInput = {
-        id: req.body.id,
-        calle: req.body.calle,
-        altura: req.body.altura,
-        detalles: req.body.detalles,
-        localidad: req.body.localidad,
-        lat: req.body.lat,
-        lng: req.body.lng
+    const schema = req.method === 'POST' ? DireccionSchema : DireccionSchema.partial()
+    const result = schema.safeParse(req.body)
+    if (!result.success) {
+        return res.status(400).json({message: 'Datos inválidos', errors: result.error.flatten().fieldErrors})
     }
-    Object.keys(req.body.sanitizedInput).forEach(key => {
-        if(req.body.sanitizedInput[key] === undefined){
-            delete req.body.sanitizedInput[key]
-        }
-    })
-    next()
+    req.body.sanitizedInput = result.data
+    next()  
 }
+
 
 async function findAll(req: Request, res: Response){
     try {

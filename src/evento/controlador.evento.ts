@@ -1,34 +1,17 @@
-import e, { Request, Response, NextFunction, request } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Evento } from './entidad.evento.js';
 import { orm } from '../shared/db/orm.js';
-import { Organizador } from '../usuario/entidad.usuario.js';
-import { Direccion } from '../direccion/entidad.direccion.js';
+import { EventoCreateSchema, EventoUpdateSchema } from '../shared/schemas.js';
 
 const em = orm.em
 
 function sanitizeEventoInput(req: Request, res: Response, next: NextFunction){
-    req.body.sanitizedInput = {
-        id: req.body.id,
-        nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
-        precioEntrada: req.body.precioEntrada,
-        cantidadCupos: req.body.cantidadCupos,
-        fechaInicio: req.body.fechaInicio ? new Date(req.body.fechaInicio) : undefined,
-        horaInicio: req.body.horaInicio ? new Date(req.body.horaInicio) : undefined,
-        horaFin: req.body.horaFin ? new Date(req.body.horaFin) : undefined,
-        cuposDisponibles: req.body.cuposDisponibles,
-        edadMinima: req.body.edadMinima,
-        estado: req.body.estado,
-        destacado: req.body.destacado,
-        claseEvento: req.body.claseEvento,
-        organizador: req.body.organizador,
-        direccion: req.body.direccion,
+    const schema = req.method === 'POST' ? EventoCreateSchema : EventoUpdateSchema
+    const result = schema.safeParse(req.body)
+    if (!result.success) {
+        return res.status(400).json({message: 'Datos inválidos', errors: result.error.flatten().fieldErrors})
     }
-    Object.keys(req.body.sanitizedInput).forEach(key => {
-        if(req.body.sanitizedInput[key] === undefined){
-            delete req.body.sanitizedInput[key]
-        }
-    })
+    req.body.sanitizedInput = result.data
     next()
 }
 
@@ -53,7 +36,12 @@ async function findOne(req: Request, res: Response){
 
 async function add(req: Request, res: Response){
     try {
-        const evento = em.create(Evento, req.body.sanitizedInput)
+        const evento = em.create(Evento, {
+            ...req.body.sanitizedInput,
+            estado: 'pendiente',
+            destacado: false,
+            cuposDisponibles: req.body.sanitizedInput.cantidadCupos
+        })
         await em.flush()
         res.status(201).json({message: 'Evento creado', data: evento})
     } catch (error: any) {

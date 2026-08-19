@@ -1,29 +1,19 @@
-import e, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Administrador, Cliente, Organizador, Usuario } from './entidad.usuario.js';
 import { orm } from '../shared/db/orm.js';
 import { ServiceAutenticacion } from '../autenticacion/service.autenticacion.js';
+import { UsuarioCreateSchema, UsuarioUpdateSchema } from '../shared/schemas.js';
 
 const em = orm.em;
-
 const serviceAutenticacion = new ServiceAutenticacion(em);
 
 function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction){
-    req.body.sanitizedInput = {
-        id: req.body.id,
-        dni: req.body.dni,
-        nombre: req.body.nombre,
-        apellido: req.body.apellido,
-        email: req.body.email,
-        telefono: req.body.telefono,
-        contrasena: req.body.contrasena,
-        fechaNacimiento: req.body.fechaNacimiento ? new Date(req.body.fechaNacimiento) : undefined,
-        empresa: req.body.empresa
+    const schema = req.method === 'POST' ? UsuarioCreateSchema : UsuarioUpdateSchema;
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({message: 'Datos inválidos', errors: result.error.flatten().fieldErrors});
     }
-    Object.keys(req.body.sanitizedInput).forEach(key => {
-        if (req.body.sanitizedInput[key] === undefined) {
-            delete req.body.sanitizedInput[key]
-        }
-    })
+    req.body.sanitizedInput = result.data
     next()
 }
 
@@ -140,6 +130,9 @@ async function updateCliente(req: Request, res: Response){
     try {
         const id = Number.parseInt(req.params.id)
         const clienteParaActualizar = await em.findOneOrFail(Cliente, { id })
+        if(req.body.sanitizedInput.contrasena) {
+            req.body.sanitizedInput.contrasena = await serviceAutenticacion.hashContraseña(req.body.sanitizedInput.contrasena)
+        }
         em.assign(clienteParaActualizar, req.body.sanitizedInput)
         await em.flush()
         res.status(200).json({message: 'Cliente actualizado', data: clienteParaActualizar})
@@ -152,6 +145,9 @@ async function updateOrganizador(req: Request, res: Response){
     try {
         const id = Number.parseInt(req.params.id)
         const organizadorParaActualizar = await em.findOneOrFail(Organizador, { id })
+        if(req.body.sanitizedInput.contrasena) {
+            req.body.sanitizedInput.contrasena = await serviceAutenticacion.hashContraseña(req.body.sanitizedInput.contrasena)
+        }
         em.assign(organizadorParaActualizar, req.body.sanitizedInput)
         await em.flush()
         res.status(200).json({message: 'Organizador actualizado', data: organizadorParaActualizar})
@@ -164,6 +160,9 @@ async function updateAdministrador(req: Request, res: Response){
     try {
         const id = Number.parseInt(req.params.id)
         const administradorParaActualizar = await em.findOneOrFail(Administrador, { id })
+        if(req.body.sanitizedInput.contrasena) {
+            req.body.sanitizedInput.contrasena = await serviceAutenticacion.hashContraseña(req.body.sanitizedInput.contrasena)
+        }   
         em.assign(administradorParaActualizar, req.body.sanitizedInput)
         await em.flush()
         res.status(200).json({message: 'Administrador actualizado', data: administradorParaActualizar})

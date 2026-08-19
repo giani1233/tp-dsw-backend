@@ -1,20 +1,17 @@
-import e, { Request, Response, NextFunction, request } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Provincia } from './entidad.provincia.js'; 
 import { orm } from '../shared/db/orm.js';
+import { ProvinciaSchema } from '../shared/schemas.js';
 
 const em = orm.em
 
 function sanitizeProvinciaInput(req: Request, res: Response, next: NextFunction) {
-    req.body.sanitizedInput = {
-        id: req.body.id,
-        nombre: req.body.nombre,
-        codigo: req.body.codigo
+    const schema = req.method === 'POST' ? ProvinciaSchema : ProvinciaSchema.partial()
+    const result = schema.safeParse(req.body)
+    if (!result.success) {
+        return res.status(400).json({ message: 'Datos inválidos', errors: result.error.flatten().fieldErrors })
     }
-    Object.keys(req.body.sanitizedInput).forEach(key => {
-        if(req.body.sanitizedInput[key] === undefined){
-            delete req.body.sanitizedInput[key]
-        }
-    })
+    req.body.sanitizedInput = result.data
     next()
 }
 

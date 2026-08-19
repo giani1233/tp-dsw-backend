@@ -47,6 +47,9 @@ importers:
       reflect-metadata:
         specifier: 0.1.13
         version: 0.1.13
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@types/bcryptjs':
         specifier: ^3.0.0
@@ -865,6 +868,9 @@ packages:
     engines: {node: '>= 8'}
     hasBin: true
 
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
 snapshots:
 
   '@mikro-orm/core@6.6.4':
@@ -1650,3 +1656,5 @@ snapshots:
   which@2.0.2:
     dependencies:
       isexe: 2.0.0
+
+  zod@4.4.3: {}

@@ -5,6 +5,7 @@ import { MercadoPagoConfig, Payment, Preference } from 'mercadopago'
 import { Entrada } from '../entrada/entidad.entrada.js'
 import { Evento } from '../evento/entidad.evento.js';
 import { Cliente } from '../usuario/entidad.usuario.js';
+import { PagoSchema } from '../shared/schemas.js';
 import nodemailer from 'nodemailer';
 
 const em = orm.em
@@ -61,18 +62,13 @@ async function enviarMailConfirmacion(cliente: any, evento: any) {
 }
 
 function sanitizePagoinput(req: Request, res: Response, next: NextFunction) {
-    req.body.sanitizedInput = {
-        id: req.body.id,
-        fechaPago: req.body.fechaPago ? new Date(req.body.fechaPago) : undefined,
-        monto: req.body.monto,
-        entrada: req.body.entrada
+    const schema = req.method === 'POST' ? PagoSchema : PagoSchema.partial();
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({ message: 'Datos inválidos', errors: result.error.flatten().fieldErrors });
     }
-    Object.keys(req.body.sanitizedInput).forEach(key => {
-        if (req.body.sanitizedInput[key] === undefined) {
-            delete req.body.sanitizedInput[key]
-        }
-    })
-    next()
+    req.body.sanitizedInput = result.data;
+    next();
 }
 
 async function crearPreferenciaMP(req: Request, res: Response){

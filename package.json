@@ -25,7 +25,8 @@
     "mercadopago": "^2.9.0",
     "node-cron": "^4.2.1",
     "nodemailer": "^8.0.1",
-    "reflect-metadata": "0.1.13"
+    "reflect-metadata": "0.1.13",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",

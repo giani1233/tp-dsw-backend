@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { orm } from '../shared/db/orm.js';
 import { ClaseEvento } from './entidad.claseEvento.js';
+import { ClaseEventoSchema } from '../shared/schemas.js';
 
 const em = orm.em
 
@@ -27,7 +28,11 @@ async function findOne(req: Request, res: Response){
 
 async function add(req: Request, res: Response){
     try {
-        const claseEvento = em.create(ClaseEvento, req.body)
+        const result = ClaseEventoSchema.safeParse(req.body);
+        if (!result.success) {
+            return res.status(400).json({ message: 'Datos inválidos', errors: result.error.flatten().fieldErrors });
+        }
+        const claseEvento = em.create(ClaseEvento, result.data)
         await em.flush();
         res.status(201).json({message: 'Clase de evento creada', data: claseEvento});
     } catch (error: any)
@@ -38,9 +43,13 @@ async function add(req: Request, res: Response){
 
 async function update(req: Request, res: Response){
     try {
+        const result = ClaseEventoSchema.partial().safeParse(req.body);
+        if (!result.success) {
+            return res.status(400).json({ message: 'Datos inválidos', errors: result.error.flatten().fieldErrors });
+        }
         const id = Number.parseInt(req.params.id);
         const claseEvento = await em.getReference(ClaseEvento, id);
-        em.assign(claseEvento, req.body);
+        em.assign(claseEvento, result.data);
         await em.flush();
         res.status(200).json({message: 'Clase de evento actualizada'});
     } catch (error: any)
