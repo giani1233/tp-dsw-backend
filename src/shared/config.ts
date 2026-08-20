@@ -13,5 +13,5 @@ export const config = {
     emailPort: Number(process.env.EMAIL_PORT) || 2525,
     emailUser: requerirVariable('EMAIL_USER'),
     emailPass: requerirVariable('EMAIL_PASS'),
-    dbUrl: requerirVariable('DB_URL'),
+    dbUrl: requerirVariable('DB_CLIENT_URL'),
 }
