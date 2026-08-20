@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
+import { config } from "../shared/config.js"
 
 interface JwtPayload {
     id: string,
@@ -16,7 +17,7 @@ export function verificarToken(req: Request, res: Response, next: NextFunction) 
     try {
         const verificado = jwt.verify(
             token,
-            process.env.JWT_SECRET!
+            config.jwtSecret
         ) as JwtPayload;
         (req as any).usuario = verificado;
         next();
@@ -26,4 +27,28 @@ export function verificarToken(req: Request, res: Response, next: NextFunction) 
         }
         return res.status(401).json({ message: "Token inválido" });
     }
+}
+
+export function soloAdministrador(req: Request, res: Response, next: NextFunction) {
+    const usuario = (req as any).usuario;
+    if (!usuario || usuario.tipo !== 'administrador') {
+        return res.status(403).json({ message: "Acceso restringido a administradores" });
+    }
+    next();
+}
+
+export function soloOrganizador(req: Request, res: Response, next: NextFunction) {
+    const usuario = (req as any).usuario;
+    if (!usuario || usuario.tipo !== 'organizador') {
+        return res.status(403).json({ message: "Acceso restringido a organizadores" });
+    }
+    next();
+}
+
+export function soloCliente(req: Request, res: Response, next: NextFunction) {
+    const usuario = (req as any).usuario;
+    if (!usuario || usuario.tipo !== 'cliente') {
+        return res.status(403).json({ message: "Acceso restringido a clientes" });
+    }
+    next();
 }

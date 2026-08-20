@@ -100,6 +100,7 @@ async function remove(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const entrada = em.getReference(Entrada, id)
         await em.removeAndFlush(entrada)
+        res.status(200).json({message: 'Entrada eliminada'})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }

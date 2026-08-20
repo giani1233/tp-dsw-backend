@@ -73,13 +73,20 @@ function sanitizePagoinput(req: Request, res: Response, next: NextFunction) {
 
 async function crearPreferenciaMP(req: Request, res: Response){
     try {
-        const { titulo, monto, cantidad, idEvento, idUsuario } = req.body;
-
-        if (!idEvento || !idUsuario || !monto) {
+        const { idEvento, cantidad } = req.body;
+        const usuario = (req as any).usuario;
+        if (!idEvento || !usuario) {
             return res.status(400).json({ message: 'Faltan datos obligatorios' });
         }
-
+        const idUsuario = usuario.id;
         const evento = await em.findOneOrFail(Evento, { id: idEvento });
+        const cantidadEntradas = Number(cantidad) || 1;
+        if(!Number.isInteger(cantidadEntradas) || cantidadEntradas <= 0){
+            return res.status(400).json({ message: 'Cantidad de entradas inválida' });
+        }
+        if(cantidadEntradas > evento.cuposDisponibles){
+            return res.status(400).json({ message: 'No hay suficientes cupos disponibles para este evento' });
+        }
         if (evento.cuposDisponibles <= 0) {
             return res.status(400).json({ message: 'No hay cupos disponibles para este evento' });
         }
@@ -91,9 +98,9 @@ async function crearPreferenciaMP(req: Request, res: Response){
                 items: [
                     {
                         id: idEvento.toString(),
-                        title: titulo || 'Pago de entrada',
-                        quantity: Number(cantidad) || 1,
-                        unit_price: Number(monto) || 0,
+                        title: evento.nombre,
+                        quantity: cantidadEntradas,
+                        unit_price: evento.precioEntrada,
                         currency_id: 'ARS'
                     }
                 ],
@@ -210,6 +217,7 @@ async function remove(req: Request, res: Response){
         const id = Number.parseInt(req.params.id)
         const pago = em.getReference(Pago, id)
         await em.removeAndFlush(pago)
+        res.status(200).json({message: 'Pago eliminado'})
     } catch (error: any) {
         res.status(500).json({message: error.message})
     }

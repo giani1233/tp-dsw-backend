@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import { EntityManager } from "@mikro-orm/core"
 import { Usuario } from "../usuario/entidad.usuario.js"
+import { config } from "../shared/config.js"
 
 export class ServiceAutenticacion {
     constructor(private readonly em: EntityManager) {}
@@ -20,7 +21,7 @@ export class ServiceAutenticacion {
 
         const token = jwt.sign(
             {id: usuario.id, nombre: usuario.nombre, tipo: usuario.tipo},
-            process.env.JWT_SECRET || "clave_jwt_eventos_provisoria",
+            config.jwtSecret,
             {expiresIn: "2h"}
         )
 
