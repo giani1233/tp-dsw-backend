@@ -36,8 +36,10 @@ async function findOne(req: Request, res: Response){
 
 async function add(req: Request, res: Response){
     try {
+        const usuario = (req as any).usuario
         const evento = em.create(Evento, {
             ...req.body.sanitizedInput,
+            organizador: usuario.id,
             estado: 'pendiente',
             destacado: false,
             cuposDisponibles: req.body.sanitizedInput.cantidadCupos
@@ -138,6 +140,13 @@ async function findPorOrganizador(req: Request, res: Response) {
         if (isNaN(idOrganizador)) {
             return res.status(400).json({ message: 'ID de organizador inválido' });
         }
+        const usuario = (req as any).usuario
+        if (Number(usuario.id) !== idOrganizador) {
+            return res.status(403).json({
+                message: 'No autorizado'
+            })
+        }
+
         const eventos = await em.find(Evento, {
             organizador: idOrganizador
         }, {

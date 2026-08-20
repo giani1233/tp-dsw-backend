@@ -109,6 +109,13 @@ async function remove(req: Request, res: Response){
 async function findByCliente(req: Request, res: Response) {
     try {
         const idCliente = Number.parseInt(req.params.idCliente);
+        if (isNaN(idCliente)) {
+            return res.status(400).json({ message: 'ID de cliente inválido'});
+        }
+        const usuario = (req as any).usuario;
+        if (Number(usuario.id) !== idCliente) {
+            return res.status(403).json({message: 'No autorizado'});
+        }
         const entradas = await em.find(Entrada, { cliente: idCliente, estado: 'adquirida' }, { populate: ['evento', 'cliente'] });
         res.status(200).json({ message: 'Entradas encontradas para el cliente', data: entradas });
     } catch (error: any) {
