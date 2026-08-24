@@ -53,7 +53,7 @@ export const ProvinciaSchema = z.object({
 
 export const LocalidadSchema = z.object({
     nombre: z.string().min(1, { message: "El nombre es obligatorio" }),
-    codigoPosta: z.string().min(1, { message: "El código postal es obligatorio" }),
+    codigoPostal: z.string().min(1, { message: "El código postal es obligatorio" }),
     provincia: z.number().int().positive(),
 })
 
