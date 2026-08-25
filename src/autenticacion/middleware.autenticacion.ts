@@ -52,3 +52,11 @@ export function soloCliente(req: Request, res: Response, next: NextFunction) {
     }
     next();
 }
+
+export function soloOrganizadorOAdmin(req: Request, res: Response, next: NextFunction) {
+    const usuario = (req as any).usuario;
+    if (!usuario || (usuario.tipo !== 'organizador' && usuario.tipo !== 'administrador')) {
+        return res.status(403).json({ message: "Acceso restringido a organizadores o administradores" });
+    }
+    next();
+}

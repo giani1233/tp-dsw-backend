@@ -48,7 +48,7 @@ export const ClaseEventoSchema = z.object({
 
 export const ProvinciaSchema = z.object({
     nombre: z.string().min(1, { message: "El nombre es obligatorio" }),
-    codigo: z.coerce.string().min(1, { message: "El código debe ser un número positivo" }),
+    codigo: z.coerce.string().min(1, { message: "El código es obligatorio" }),
 })
 
 export const LocalidadSchema = z.object({

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { sanitizeUsuarioInput, findAll, findAllClientes, findAllOrganizadores, findAllAdministradores, findOneCliente, findOneOrganizador, findOneAdministrador, addCliente, addOrganizador, addAdministrador, updateCliente, updateOrganizador, updateAdministrador, removeCliente, removeOrganizador, removeAdministrador, getByFilter } from './controlador.usuario.js';
-import { verificarToken, soloAdministrador } from '../autenticacion/middleware.autenticacion.js'
+import { verificarToken, soloAdministrador, soloOrganizadorOAdmin } from '../autenticacion/middleware.autenticacion.js'
 
 export const rutaUsuario = Router();
 
@@ -12,7 +12,7 @@ rutaUsuario.get('/Cliente', verificarToken, soloAdministrador, findAllClientes)
 rutaUsuario.get('/Organizador', verificarToken, soloAdministrador, findAllOrganizadores)
 rutaUsuario.get('/Administrador', verificarToken, soloAdministrador, findAllAdministradores)
 rutaUsuario.get('/Cliente/:id', verificarToken, soloAdministrador, findOneCliente)
-rutaUsuario.get('/Organizador/:id', verificarToken, soloAdministrador, findOneOrganizador)
+rutaUsuario.get('/Organizador/:id', verificarToken, soloOrganizadorOAdmin, findOneOrganizador)
 rutaUsuario.get('/Administrador/:id', verificarToken, soloAdministrador, findOneAdministrador)
 rutaUsuario.post('/Administrador', verificarToken, soloAdministrador, sanitizeUsuarioInput, addAdministrador)
 rutaUsuario.put('/Cliente/:id', verificarToken, soloAdministrador, sanitizeUsuarioInput, updateCliente)

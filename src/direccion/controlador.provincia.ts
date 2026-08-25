@@ -7,7 +7,6 @@ const em = orm.em
 
 function sanitizeProvinciaInput(req: Request, res: Response, next: NextFunction) {
     const schema = req.method === 'POST' ? ProvinciaSchema : ProvinciaSchema.partial()
-    console.log('BODY PROVINCIA:', req.body)
     const result = schema.safeParse(req.body)
     if (!result.success) {
         return res.status(400).json({ message: 'Datos inválidos', errors: result.error.flatten().fieldErrors })
