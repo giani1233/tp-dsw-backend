@@ -36,7 +36,7 @@ export const UsuarioCreateSchema = z.object({
     email: z.string().email({ message: "El correo electrónico no es válido" }),
     telefono: z.string().min(1).regex(/^\d+$/, { message: "El teléfono puede contener solo números" }),
     contrasena: z.string().min(8).max(20),
-    fechaNacimiento: z.coerce.date(),
+    fechaNacimiento: z.coerce.date().optional(),
     empresa: z.string().optional(),
 })
 
