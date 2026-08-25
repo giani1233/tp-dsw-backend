@@ -5,7 +5,7 @@ import { verificarToken, soloAdministrador, soloCliente } from '../autenticacion
 export const rutaEntrada = Router();
 
 rutaEntrada.get('/cliente/:idCliente', verificarToken, soloCliente, findByCliente);
-rutaEntrada.post('/:id/reembolsar', verificarToken, soloAdministrador, reembolsarEntrada);
+rutaEntrada.post('/:id/reembolsar', verificarToken, soloCliente, reembolsarEntrada);
 rutaEntrada.get('/', verificarToken, soloAdministrador, findAll);
 rutaEntrada.get('/:id', verificarToken, soloAdministrador, findOne);
 rutaEntrada.post('/', verificarToken, soloAdministrador, sanitizeEntradaInput, add);
