@@ -12,12 +12,3 @@ rutaLocalidad.post('/', verificarToken, soloAdministrador, sanitizeLocalidadInpu
 rutaLocalidad.put('/:id', verificarToken, soloAdministrador, sanitizeLocalidadInput, update)
 rutaLocalidad.patch('/:id', verificarToken, soloAdministrador, sanitizeLocalidadInput, update)
 rutaLocalidad.delete('/:id', verificarToken, soloAdministrador, remove) 
-
-/* rutaLocalidad.get('/filtro', getByFilter)
-rutaLocalidad.get('/', findAll)
-rutaLocalidad.get('/provincia/:provinciaId', findByProvincia);
-rutaLocalidad.get('/:id', findOne)
-rutaLocalidad.post('/', sanitizeLocalidadInput, add)
-rutaLocalidad.put('/:id', sanitizeLocalidadInput, update)
-rutaLocalidad.patch('/:id', sanitizeLocalidadInput, update)
-rutaLocalidad.delete('/:id', remove) */

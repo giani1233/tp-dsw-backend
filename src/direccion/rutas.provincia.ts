@@ -11,11 +11,3 @@ rutaProvincia.post('/', verificarToken, soloAdministrador, sanitizeProvinciaInpu
 rutaProvincia.put('/:id', verificarToken, soloAdministrador, sanitizeProvinciaInput, update)
 rutaProvincia.patch('/:id', verificarToken, soloAdministrador, sanitizeProvinciaInput, update)
 rutaProvincia.delete('/:id', verificarToken, soloAdministrador, remove)
-
-/* rutaProvincia.get('/filtro', getByFilter)
-rutaProvincia.get('/', findAll)
-rutaProvincia.get('/:id', findOne)
-rutaProvincia.post('/', sanitizeProvinciaInput, add)
-rutaProvincia.put('/:id', sanitizeProvinciaInput, update)
-rutaProvincia.patch('/:id', sanitizeProvinciaInput, update)
-rutaProvincia.delete('/:id', remove) */

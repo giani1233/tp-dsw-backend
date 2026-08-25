@@ -12,12 +12,3 @@ rutaDireccion.post('/', verificarToken, soloAdministrador, sanitizeDireccionInpu
 rutaDireccion.put('/:id', verificarToken, soloAdministrador, sanitizeDireccionInput, update)
 rutaDireccion.patch('/:id', verificarToken, soloAdministrador, sanitizeDireccionInput, update)
 rutaDireccion.delete('/:id', verificarToken, soloAdministrador, remove) 
-
-/* rutaDireccion.get('/filtro', getByFilter)
-rutaDireccion.get('/', findAll)
-rutaDireccion.get('/:id', findOne)
-rutaDireccion.get('/localidad/:localidadId', findByLocalidad)
-rutaDireccion.post('/', sanitizeDireccionInput, add)
-rutaDireccion.put('/:id', sanitizeDireccionInput, update)
-rutaDireccion.patch('/:id', sanitizeDireccionInput, update)
-rutaDireccion.delete('/:id', remove) */

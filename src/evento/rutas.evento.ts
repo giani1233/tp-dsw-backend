@@ -16,16 +16,3 @@ rutaEvento.patch('/:id', verificarToken, soloAdministrador, sanitizeEventoInput,
 rutaEvento.delete('/:id', verificarToken, soloAdministrador, remove)
 rutaEvento.post('/', verificarToken, soloOrganizador, sanitizeEventoInput, add)
 
-
-/* rutaEvento.get('/', findAll)
-rutaEvento.get('/organizador/:idOrganizador', findPorOrganizador)
-rutaEvento.get('/aprobados-para-mapa', findAprobadosParaMapa)
-rutaEvento.get('/pendientes', findPendientes)
-rutaEvento.get('/aprobados', findAprobados)
-rutaEvento.get('/destacados', findDestacados)
-rutaEvento.get('/:id', findOne)
-rutaEvento.post('/', sanitizeEventoInput, add)
-rutaEvento.put('/:id', sanitizeEventoInput, update)
-rutaEvento.patch('/:id', sanitizeEventoInput, update)
-rutaEvento.delete('/:id', remove)
- */

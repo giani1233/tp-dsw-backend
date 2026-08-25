@@ -10,10 +10,3 @@ rutaClaseEvento.get('/:id', findOne)
 rutaClaseEvento.post('/', verificarToken, soloAdministrador, add)
 rutaClaseEvento.put('/:id', verificarToken, soloAdministrador, update)
 rutaClaseEvento.delete('/:id', verificarToken, soloAdministrador, remove)
-
-/* rutaClaseEvento.get('/filtro', getByFilter)
-rutaClaseEvento.get('/', findAll)
-rutaClaseEvento.get('/:id', findOne)
-rutaClaseEvento.post('/', add)
-rutaClaseEvento.put('/:id', update)
-rutaClaseEvento.delete('/:id', remove) */

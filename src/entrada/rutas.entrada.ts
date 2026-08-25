@@ -12,12 +12,3 @@ rutaEntrada.post('/', verificarToken, soloAdministrador, sanitizeEntradaInput, a
 rutaEntrada.put('/:id', verificarToken, soloAdministrador, sanitizeEntradaInput, update);
 rutaEntrada.patch('/:id', verificarToken, soloAdministrador, sanitizeEntradaInput, update);
 rutaEntrada.delete('/:id', verificarToken, soloAdministrador, remove);
-
-/* rutaEntrada.get('/cliente/:idCliente', findByCliente);
-rutaEntrada.post('/:id/reembolsar', reembolsarEntrada);
-rutaEntrada.get('/', findAll);
-rutaEntrada.get('/:id', findOne);
-rutaEntrada.post('/', sanitizeEntradaInput, add);
-rutaEntrada.put('/:id', sanitizeEntradaInput, update);
-rutaEntrada.patch('/:id', sanitizeEntradaInput, update);
-rutaEntrada.delete('/:id', remove); */
